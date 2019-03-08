@@ -1,0 +1,10 @@
+{
+    "name": "pl.apkd.unityasync",
+    "displayName": "Apkd.UnityAsync",
+    "version": "0.0.1",
+    "unity": "2018.3",
+    "description": "High performance, allocation-free async/await library for Unity.",
+    "dependencies": {},
+    "keywords": [],
+    "category": "Unity"
+}
