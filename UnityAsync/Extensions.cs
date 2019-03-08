@@ -3,11 +3,12 @@ using System.Collections;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
+using Apkd.Internal;
 using Apkd.Internal.Awaiters;
 
-namespace Apkd.Internal
+namespace Apkd
 {
-    static class Extensions
+    public static class Extensions
     {
         /// <summary>
         /// Configure the type of update cycle it should be evaluated on.

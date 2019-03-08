@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace Apkd.Internal.Awaiters
 {
-    struct IEnumeratorAwaiter : INotifyCompletion
+    public struct IEnumeratorAwaiter : INotifyCompletion
     {
         static readonly SendOrPostCallback postCallback = state => ((Action)state)();
 
