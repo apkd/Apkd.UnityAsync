@@ -56,16 +56,16 @@ namespace Apkd
             /// <see cref="UnityEngine.WaitForSeconds"/>.
             /// </summary>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static WaitForSeconds Seconds(float duration)
-                => new WaitForSeconds(duration);
+            public static WaitForSeconds Delay(float seconds)
+                => new WaitForSeconds(seconds);
 
             /// <summary>
             /// Convenience function to wait for a number of unscaled seconds before continuing. Equivalent to Unity's
             /// <see cref="UnityEngine.WaitForSecondsRealtime"/>.
             /// </summary>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static WaitForSecondsRealtime SecondsRealtime(float duration)
-                => new WaitForSecondsRealtime(duration);
+            public static WaitForSecondsRealtime DelayUnscaled(float seconds)
+                => new WaitForSecondsRealtime(seconds);
 
             /// <summary>
             /// Convenience function to wait for a condition to return true. Equivalent to Unity's
@@ -128,16 +128,16 @@ namespace Apkd
         /// <see cref="UnityEngine.WaitForSeconds"/>.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Continuation<WaitForSeconds> AsyncSeconds(this Object obj, float duration)
-            => new Continuation<WaitForSeconds>(new WaitForSeconds(duration, obj));
+        public static Continuation<WaitForSeconds> AsyncDelay(this Object obj, float seconds)
+            => new Continuation<WaitForSeconds>(new WaitForSeconds(seconds, obj));
 
         /// <summary>
         /// Convenience function to wait for a number of unscaled seconds before continuing. Equivalent to Unity's
         /// <see cref="UnityEngine.WaitForSecondsRealtime"/>.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Continuation<WaitForSecondsRealtime> AsyncSecondsRealtime(this Object obj, float duration)
-            => new Continuation<WaitForSecondsRealtime>(new WaitForSecondsRealtime(duration, obj));
+        public static Continuation<WaitForSecondsRealtime> AsyncDelayUnscaled(this Object obj, float seconds)
+            => new Continuation<WaitForSecondsRealtime>(new WaitForSecondsRealtime(seconds, obj));
 
         /// <summary>
         /// Convenience function to wait for a condition to return true. Equivalent to Unity's
