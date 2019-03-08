@@ -1,21 +1,24 @@
 ﻿using System;
 
-namespace UnityAsync
+namespace Apkd.Internal
 {
-	public struct WaitForSeconds : IAwaitInstruction
-	{
-		readonly float finishTime;
+    public struct WaitForSeconds : IAwaitInstruction
+    {
+        readonly float finishTime;
 
-		bool IAwaitInstruction.IsCompleted() => AsyncManager.CurrentTime >= finishTime;
+        readonly UnityEngine.Object owner;
 
-		/// <summary>
-		/// Waits for the specified number of seconds to pass before continuing.
-		/// </summary>
-		public WaitForSeconds(float seconds)
-		{
-			finishTime = AsyncManager.CurrentTime + seconds;
-		}
-		
-		public Continuation<WaitForSeconds> GetAwaiter() => new Continuation<WaitForSeconds>(this);
-	}
+        bool IAwaitInstruction.IsCompleted() => owner && AsyncManager.CurrentTime >= finishTime;
+
+        /// <summary>
+        /// Waits for the specified number of seconds to pass before continuing.
+        /// </summary>
+        public WaitForSeconds(float seconds, UnityEngine.Object owner = null)
+        {
+            finishTime = AsyncManager.CurrentTime + seconds;
+            this.owner = owner ?? AsyncManager.Instance;
+        }
+
+        public Continuation<WaitForSeconds> GetAwaiter() => new Continuation<WaitForSeconds>(this);
+    }
 }

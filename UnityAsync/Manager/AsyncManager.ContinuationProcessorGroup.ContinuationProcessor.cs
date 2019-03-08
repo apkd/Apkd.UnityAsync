@@ -1,54 +1,28 @@
-namespace UnityAsync
+using System.Collections.Concurrent;
+
+namespace Apkd.Internal
 {
-	public partial class AsyncManager
-	{
-		partial class ContinuationProcessorGroup
-		{
-			const int MaxQueueSize = 500000;
-			
-			class ContinuationProcessor<T> : IContinuationProcessor where T : IContinuation
-			{
-				public static ContinuationProcessor<T> instance;
+    public sealed partial class AsyncManager
+    {
+        sealed partial class ContinuationProcessorGroup
+        {
+            const int MaxQueueSize = 4096;
 
-				T[] currentQueue;
-				T[] futureQueue;
+            sealed class ContinuationProcessor<T> : IContinuationProcessor where T : IContinuation
+            {
+                public static ContinuationProcessor<T> instance;
+                readonly ConcurrentQueue<T> queue = new ConcurrentQueue<T>();
 
-				int futureCount;
+                public void Process()
+                {
+                    for (int n = queue.Count; n > 0; --n)
+                        if (queue.TryDequeue(out var continuation))
+                            if (!continuation.Evaluate())
+                                queue.Enqueue(continuation);
+                }
 
-				public ContinuationProcessor()
-				{
-					currentQueue = new T[MaxQueueSize];
-					futureQueue = new T[MaxQueueSize];
-				}
-
-				public void Process()
-				{
-					int count = futureCount;
-					futureCount = 0;
-					
-					// swap queues
-					var tmp = currentQueue;
-					currentQueue = futureQueue;
-					futureQueue = tmp;
-
-					for(int i = 0; i < count; ++i)
-					{
-						var c = currentQueue[i];
-
-						if(!c.Evaluate())
-						{
-							futureQueue[futureCount] = c;
-							++futureCount;
-						}
-					}
-				}
-
-				public void Add(T cont)
-				{
-					futureQueue[futureCount] = cont;
-					++futureCount;
-				}
-			}
-		}
-	}
+                public void Add(in T cont) => queue.Enqueue(cont);
+            }
+        }
+    }
 }

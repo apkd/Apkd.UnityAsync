@@ -1,31 +1,29 @@
-﻿#if UNITY_EDITOR
-using UnityEngine;
+﻿namespace Apkd.Internal
+{
+    public struct WaitForFrames : IAwaitInstruction
+    {
+        readonly int finishFrame;
+        readonly UnityEngine.Object owner;
+
+        bool IAwaitInstruction.IsCompleted() => owner && finishFrame <= AsyncManager.CurrentFrameCount;
+
+        /// <summary>
+        /// Waits for the specified number of frames to pass before continuing.
+        /// </summary>
+        public WaitForFrames(int count, UnityEngine.Object owner = null)
+        {
+#if UNITY_EDITOR
+            if (count <= 0)
+            {
+                count = 1;
+                UnityEngine.Debug.LogError($"{nameof(count)} should be greater than 0. This check will only appear in edit mode.");
+            }
 #endif
 
-namespace UnityAsync
-{
-	public struct WaitForFrames : IAwaitInstruction
-	{
-		readonly int finishFrame;
+            finishFrame = AsyncManager.CurrentFrameCount + count;
+            this.owner = owner ?? AsyncManager.Instance;
+        }
 
-		bool IAwaitInstruction.IsCompleted() => finishFrame <= AsyncManager.CurrentFrameCount;
-		
-		/// <summary>
-		/// Waits for the specified number of frames to pass before continuing.
-		/// </summary>
-		public WaitForFrames(int count)
-		{
-			#if UNITY_EDITOR
-			if(count <= 0)
-			{
-				count = 1;
-				Debug.LogError($"{nameof(count)} should be greater than 0. This check will only appear in edit mode.");
-			}
-			#endif
-			
-			finishFrame = AsyncManager.CurrentFrameCount + count;
-		}
-		
-		public Continuation<WaitForFrames> GetAwaiter() => new Continuation<WaitForFrames>(this);
-	}
+        public Continuation<WaitForFrames> GetAwaiter() => new Continuation<WaitForFrames>(this);
+    }
 }
