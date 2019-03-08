@@ -115,3 +115,28 @@ sealed class Examples : MonoBehaviour
 }
 
 ```
+
+## Installation
+
+### Unity Package Manager *(Unity 2018.3+)*
+
+Add a reference to the repository in the [`Packages\manifest.json`](https://docs.unity3d.com/Packages/com.unity.package-manager-ui@1.8/manual/index.html#project-manifests) file in your project directory:
+
+```json
+{
+  "dependencies": {
+    "com.unity.postprocessing": "2.1.3",
+    "pl.apkd.unityasync": "https://github.com/apkd/Apkd.UnityAsync.git"
+  }
+}
+```
+
+### Manual
+
+#### From source *(Unity 2018.3+)*
+
+Clone/download this repository into the `Assets` directory of your project.
+
+#### Using compiled DLL *(Unity 2017.1+)*
+
+Download and extract the latest [release zip](https://github.com/apkd/Apkd.UnityAsync/releases) into the `Assets` directory of your project.
