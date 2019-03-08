@@ -5,33 +5,33 @@ using System.Threading;
 
 namespace UnityAsync.Awaiters
 {
-	struct IEnumeratorAwaiter : INotifyCompletion
-	{
-		static readonly SendOrPostCallback postCallback = state => ((Action)state)();
+    struct IEnumeratorAwaiter : INotifyCompletion
+    {
+        static readonly SendOrPostCallback postCallback = state => ((Action)state)();
 
-		readonly IEnumerator coroutine;
+        readonly IEnumerator coroutine;
 
-		public IEnumeratorAwaiter(IEnumerator coroutine)
-		{
-			this.coroutine = coroutine;
-		}
+        public IEnumeratorAwaiter(IEnumerator coroutine)
+        {
+            this.coroutine = coroutine;
+        }
 
-		public void OnCompleted(Action continuation)
-		{
-			if(AsyncManager.InUnityContext)
-				AsyncManager.StartCoroutine(ContinuationCoroutine(continuation));
-			else
-				AsyncManager.UnitySyncContext.Post(postCallback, AsyncManager.StartCoroutine(ContinuationCoroutine(continuation)));
-		}
+        public void OnCompleted(Action continuation)
+        {
+            if (AsyncManager.InUnityContext)
+                AsyncManager.StartCoroutine(ContinuationCoroutine(continuation));
+            else
+                AsyncManager.UnitySyncContext.Post(postCallback, AsyncManager.StartCoroutine(ContinuationCoroutine(continuation)));
+        }
 
-		IEnumerator ContinuationCoroutine(Action continuation)
-		{
-			yield return AsyncManager.StartCoroutine(coroutine);
+        IEnumerator ContinuationCoroutine(Action continuation)
+        {
+            yield return AsyncManager.StartCoroutine(coroutine);
 
-			continuation();
-		}
+            continuation();
+        }
 
-		public bool IsCompleted => false;
-		public void GetResult() { }
-	}
+        public bool IsCompleted => false;
+        public void GetResult() { }
+    }
 }

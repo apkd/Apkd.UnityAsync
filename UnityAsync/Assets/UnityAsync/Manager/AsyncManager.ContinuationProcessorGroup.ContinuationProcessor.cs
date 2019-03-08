@@ -1,54 +1,54 @@
 namespace UnityAsync
 {
-	public partial class AsyncManager
-	{
-		partial class ContinuationProcessorGroup
-		{
-			const int MaxQueueSize = 500000;
-			
-			class ContinuationProcessor<T> : IContinuationProcessor where T : IContinuation
-			{
-				public static ContinuationProcessor<T> instance;
+    public partial class AsyncManager
+    {
+        partial class ContinuationProcessorGroup
+        {
+            const int MaxQueueSize = 500000;
 
-				T[] currentQueue;
-				T[] futureQueue;
+            class ContinuationProcessor<T> : IContinuationProcessor where T : IContinuation
+            {
+                public static ContinuationProcessor<T> instance;
 
-				int futureCount;
+                T[] currentQueue;
+                T[] futureQueue;
 
-				public ContinuationProcessor()
-				{
-					currentQueue = new T[MaxQueueSize];
-					futureQueue = new T[MaxQueueSize];
-				}
+                int futureCount;
 
-				public void Process()
-				{
-					int count = futureCount;
-					futureCount = 0;
-					
-					// swap queues
-					var tmp = currentQueue;
-					currentQueue = futureQueue;
-					futureQueue = tmp;
+                public ContinuationProcessor()
+                {
+                    currentQueue = new T[MaxQueueSize];
+                    futureQueue = new T[MaxQueueSize];
+                }
 
-					for(int i = 0; i < count; ++i)
-					{
-						var c = currentQueue[i];
+                public void Process()
+                {
+                    int count = futureCount;
+                    futureCount = 0;
 
-						if(!c.Evaluate())
-						{
-							futureQueue[futureCount] = c;
-							++futureCount;
-						}
-					}
-				}
+                    // swap queues
+                    var tmp = currentQueue;
+                    currentQueue = futureQueue;
+                    futureQueue = tmp;
 
-				public void Add(T cont)
-				{
-					futureQueue[futureCount] = cont;
-					++futureCount;
-				}
-			}
-		}
-	}
+                    for (int i = 0; i < count; ++i)
+                    {
+                        var c = currentQueue[i];
+
+                        if (!c.Evaluate())
+                        {
+                            futureQueue[futureCount] = c;
+                            ++futureCount;
+                        }
+                    }
+                }
+
+                public void Add(T cont)
+                {
+                    futureQueue[futureCount] = cont;
+                    ++futureCount;
+                }
+            }
+        }
+    }
 }
